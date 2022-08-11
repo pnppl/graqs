@@ -5,13 +5,10 @@
 # Developed on Linux but POSIX compliant
 
 ## TODO
-# inline the CSS we actually need instead of linking to GR, or don't. who cares. low priority. works fine without a stylesheet. flag is obnoxious though
 # parameters would be nice
 # !! parse html and generate list of links to answers for easy archival
-# fix page margins
-# maybe try to programmatically remove some cruft like the flag, like/comment links etc
 # big but would be nice: save the comments. would probably involve a major rework.
-# 	would need to get a cookie and then either replace the current scrape section with scraping of every comment page 
+# 	would need to get a cookie and then either replace the current scrape section with scraping of every comment page
 #	-- which would multiply the requests sent at least x20 -- or possibly make it happen from the list page with some 
 #	kind of cleverness. probably not worth it if it necessitated selenium or the like. though that could be fun and we need to get a cookie anyway
 
@@ -19,7 +16,7 @@ bold=$(tput bold)
 normal=$(tput sgr0)
 
 ## config ##
-author="16094.Lois_McMaster_Bujold"
+author="4763.John_Scalzi"
 sort="oldest" # oldest, newest, popular
 
 filename="$author-QA-$(date +%F).html"
@@ -52,6 +49,82 @@ myhtml_pre='<!DOCTYPE html>
 title="$author_parsed Q&amp;A ($(date +%F))"
 myhtml_post='</title>
 <base href="https://www.goodreads.com/">
+<style>
+img {
+	height: 50px;
+	width: 50px;
+	border-radius: 25px;
+	float: left;
+	margin-right: 10px;
+}
+
+body {
+	margin-left: 10px;
+	margin-right: 10px;
+	font-family: serif;
+	font-size: 14px;
+	line-height: 18px;
+}
+
+
+ul {
+	list-style: none;
+	margin-left: 20px;
+}
+
+li {
+	display: inline;
+}
+
+li .like_it, .flagAnswer {
+	display: none;
+}
+
+a {
+	text-decoration: none;
+	color: #181818;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.communityAnswererName a {
+	font-weight: bold;
+	color: #00635d;
+}
+
+.communityAnswerText {
+	font-family: sans-serif;
+}
+
+.allCommunityAnswers a{
+	font-family: sans-serif;
+	color: #00635d;
+}
+
+.likesCount {
+	color: #999999;
+}
+
+.footerItem {
+	text-transform: capitalize;
+	font-size: 11px;
+}
+
+.communityAnswerTextContainer {
+	margin-left: 60px;
+}
+
+.questionText {
+	margin-bottom: 13px;
+}
+
+.communityQuestionAndAnswer {
+	border-bottom: 1px solid #DFDFDF;
+	margin-bottom: 15px;
+}
+</style>
 </head>
 <body>
 <form>
