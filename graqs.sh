@@ -16,7 +16,7 @@ bold=$(tput bold)
 normal=$(tput sgr0)
 
 ## config ##
-author="4763.John_Scalzi"
+author="16094.Lois_McMaster_Bujold"
 sort="oldest" # oldest, newest, popular
 
 filename="$author-QA-$(date +%F).html"
@@ -41,7 +41,7 @@ do
 done
 
 ## generate some html ##
-author_parsed=$(echo $author | sed 's/[0-9]*\.//' | sed 's/\_/ /') # turn '0000.First_Last' into 'First Last'
+author_parsed=$(echo $author | sed 's/[0-9]*\.//' | sed 's/\_/ /g') # turn '0000.First_Last' into 'First Last'
 myhtml_pre='<!DOCTYPE html>
 <html>
 <head>
