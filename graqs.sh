@@ -18,7 +18,7 @@ normal=$(tput sgr0)
 author="16094.Lois_McMaster_Bujold"
 sort="oldest" # oldest, newest, popular
 
-## params $$
+## params ##
 answer='?'
 while getopts a:s:ynh flag
 do
