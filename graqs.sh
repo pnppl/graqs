@@ -5,7 +5,6 @@
 # Developed on Linux but POSIX compliant
 
 ## TODO
-# parameters would be nice
 # !! parse html and generate list of links to answers for easy archival
 # big but would be nice: save the comments. would probably involve a major rework.
 # 	would need to get a cookie and then either replace the current scrape section with scraping of every comment page
@@ -19,6 +18,20 @@ normal=$(tput sgr0)
 author="16094.Lois_McMaster_Bujold"
 sort="oldest" # oldest, newest, popular
 
+## params $$
+answer='?'
+while getopts a:s:ynh flag
+do
+    case "${flag}" in
+        a) author=${OPTARG};;
+        s) sort=${OPTARG};;
+        y) answer='y';;
+        n) answer='n';;
+        h) echo "Usage: ./graqs.sh -a '4763.John_Scalzi' [-s newest|$bold$()oldest$normal|popular] [-y|-n]"
+        	return 0;;
+    esac
+done
+
 filename="$author-QA-$(date +%F).html"
 pre="https://www.goodreads.com/author/$author/questions?format=json&page="
 post="&sort=$sort"
@@ -27,9 +40,9 @@ post="&sort=$sort"
 # get first page first so we know how many pages there are
 page=1
 url="$pre$page$post"
-wget -O $author-01.json "$url"
-jq -r .content_html $author-01.json > $author-01.html
-total=$(jq .total_pages $author-01.json)
+wget -O "$author-01.json" "$url"
+jq -r .content_html "$author-01.json" > "$author-01.html"
+total=$(jq .total_pages "$author-01.json")
 for page in $(seq 2 "$total")
 do
   page_0=$(printf "%02d" "$page") # leading zero
@@ -41,7 +54,7 @@ do
 done
 
 ## generate some html ##
-author_parsed=$(echo $author | sed 's/[0-9]*\.//' | sed 's/\_/ /g') # turn '0000.First_Last' into 'First Last'
+author_parsed=$(echo "$author" | sed 's/[0-9]*\.//' | sed 's/\_/ /g') # turn '0000.First_Last' into 'First Last'
 myhtml_pre='<!DOCTYPE html>
 <html>
 <head>
@@ -98,7 +111,7 @@ a:hover {
 	font-family: sans-serif;
 }
 
-.allCommunityAnswers a{
+.allCommunityAnswers a {
 	font-family: sans-serif;
 	color: #00635d;
 }
@@ -184,11 +197,14 @@ echo "$myhtml" > 0.html # we need this to be processed first
 echo "$myscript" > z.html # oops, we need the script processed last
 
 ## merge and tidy up ##
-cat ./*.html > $author-all.html
-tidy -i -o "$filename" $author-all.html
+cat ./*.html > "$author-all.html"
+tidy -i -o "$filename" "$author-all.html"
 echo
-echo "Clean up? $bold!Deletes ALL .html and .json files in working directory!$normal"
-read -r answer
+if [ "$answer" = '?' ]
+then
+	echo "Clean up? $bold!Deletes ALL .html and .json files in working directory!$normal"
+	read -r answer
+fi
 answer=$(printf '%s' "$answer" | cut -c 1) # POSIX-compliant answer=${answer:0:1} (string slice)
 if [ "$answer" = 'y' ]
 then
@@ -199,5 +215,6 @@ then
   rm -r tmp
 fi
 
+return 0
 
 # Copyleft: all wrongs reversed
